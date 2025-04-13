@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metro Bus Routes Map</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <!-- PapaParse CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.css">
+
+  <!-- APPEARANCE-->
+  <style>
+    #map {
+      height: 100vh; /* Full screen height */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MAP -->
+  <div id="map"></div>
+
+  <!-- Leaflet and PapaParse JS for parsing stops and handling map features -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+  <!-- GeoJSON Data -->
+  <script>
+    // LA COUNTY with zoom level 10
+    const map = L.map('map').setView([34.05, -118.25], 10); 
+
+    // OPENSTREETMAP FILE LAYER
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // LOAD STOP W/ STOPS.TXT
+    Papa.parse('data/stops.txt', {
+      download: true,
+      header: true,
+      complete: function(results) {
+        results.data.forEach(stop => {
+          if (stop.stop_lat && stop.stop_lon) {
+            L.circleMarker([parseFloat(stop.stop_lat), parseFloat(stop.stop_lon)], {
+              radius: 4,
+              fillColor: "#007bff",
+              color: "#fff",
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 0.8
+            }).bindPopup(`<b>${stop.stop_name}</b><br>ID: ${stop.stop_id}`).addTo(map);
+          }
+        });
+      }
+    });
+
+    //COLOR CODE SETUP
+    const busTypeColors = {
+        //ORANGE: LOCAL AND LIMITED
+      "Metro Local and Limited": "#FF6600",  
+      //RED: RAPID LINE
+      "Metro Rapid": "#FF0000",  
+     //BLUE: METRO EXPRESS LINE
+      "Metro Express": "#0000FF",            
+      //PURPLE: METRO SILVER LINE
+      "Metro Silver Line": "#9C27B0",
+        // to be added in a later addition. This is a place holder
+        //GREEN: RAIL
+      "Metro Rail": "#4CAF50",
+      //MISC:                
+      //"Metro Shuttles and Circulators": "#000000"    
+      "Other": "#000000"                  // Default color for other bus types
+    };
+
+    //METRO BUS LINE GEOJSON
+    fetch('data/Metro_Bus_Lines.geojson')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);  //PRINT
+
+        const busLinesLayer = L.geoJSON(data, {
+          style: feature => {
+            const busType = feature.properties.MetroBusType;
+            //COLOR CODE
+            const color = busTypeColors[busType] || busTypeColors["Other"]; // Default to "Other" if no match
+            return {
+              color: color,
+              weight: 3,
+              opacity: 0.7
+            };
+          },
+          onEachFeature: (feature, layer) => {
+            const route = feature.properties.RouteName;
+            const type = feature.properties.MetroBusType;
+            const url = feature.properties.NLA_URL;
+            const tooltip = feature.properties.TOOLTIP;
+
+            // Bind the popup to each feature
+            layer.bindPopup(`<strong>${route}</strong><br>Type: ${type}<br><a href="${url}" target="_blank">Metro Route Info</a><br>${tooltip}`);
+          }
+        });
+
+        // ADD ROUTES
+        busLinesLayer.addTo(map);
+      })
+      .catch(error => {
+        console.error('Error loading GeoJSON:', error);
+      });
+  </script>
+
+</body>
+</html>
