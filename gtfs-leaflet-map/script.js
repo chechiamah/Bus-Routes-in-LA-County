@@ -28,12 +28,18 @@ Papa.parse('data/stops.txt', {
 
 //COLOR CODE SETUP
 const busTypeColors = {
-  "Metro Local and Limited": "#FF6600",  // Orange for Local and Limited
-  "Metro Rapid": "#FF0000",              // Red for Rapid
-  "Metro Express": "#0000FF",            // Blue for Express
-  "Metro Silver Line": "#9C27B0",        // Purple for Silver Line
-  "Metro Rail": "#4CAF50",              // Green for Rail
-  "Other": "#000000"                    // Default color for other bus types
+  //ORANGE: LOCAL & LIMITED
+  "Metro Local and Limited": "#FF6600",
+  //RED: METRO RAPID
+  "Metro Rapid": "#FF0000",  
+  // BLUES: METRO EXPRESS
+  "Metro Express": "#0000FF",   
+  // PURPLE: METRO SILVER LINE
+  "Metro Silver Line": "#9C27B0",
+  // GREEN: METRO RAIL
+  "Metro Rail": "#4CAF50",  
+  // DEFAULT/BLACK: OTHER
+  "Other": "#000000"                    
 };
 
 //METRO BUS LINE GEOJSON
