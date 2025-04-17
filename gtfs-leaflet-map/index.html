@@ -99,8 +99,7 @@
             const tooltip = feature.properties.TOOLTIP;
 
             // Bind the popup to each feature
-            layer.bindPopup(`<strong>${route}</strong><br>Type: ${type}<br><a href="${url}" target="_blank">Metro Route Info</a><br>${tooltip}`);
-          }
+            layer.bindPopup(`<strong>${route}</strong><br>Type: ${type}<br>`);          }
         });
 
         // ADD ROUTES
