@@ -28,18 +28,12 @@ Papa.parse('data/stops.txt', {
 
 //COLOR CODE SETUP
 const busTypeColors = {
-  //ORANGE: LOCAL & LIMITED
-  "Metro Local and Limited": "#FF6600",
-  //RED: METRO RAPID
-  "Metro Rapid": "#FF0000",  
-  // BLUES: METRO EXPRESS
-  "Metro Express": "#0000FF",   
-  // PURPLE: METRO SILVER LINE
-  "Metro Silver Line": "#9C27B0",
-  // GREEN: METRO RAIL
-  "Metro Rail": "#4CAF50",  
-  // DEFAULT/BLACK: OTHER
-  "Other": "#000000"                    
+  "Metro Local and Limited": "#FF6600",  // Orange for Local and Limited
+  "Metro Rapid": "#FF0000",              // Red for Rapid
+  "Metro Express": "#0000FF",            // Blue for Express
+  "Metro Silver Line": "#9C27B0",        // Purple for Silver Line
+  "Metro Rail": "#4CAF50",              // Green for Rail
+  "Other": "#000000"                    // Default color for other bus types
 };
 
 //METRO BUS LINE GEOJSON
@@ -66,7 +60,7 @@ fetch('data/Metro_Bus_Lines.geojson')
         const tooltip = feature.properties.TOOLTIP;
 
         // Bind the popup to each feature
-        layer.bindPopup(`<strong>${route}</strong><br>Type: ${type}<br><a href="${url}" target="_blank">Metro Route Info</a><br>${tooltip}`);
+        layer.bindPopup(`<strong>${route}</strong><br>Type: ${type}<br>`);
       }
     });
 
